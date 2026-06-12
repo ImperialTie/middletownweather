@@ -3,132 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Middletown Weather Widget</title>
+
+<title>Middletown Weather</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f7fb;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    .weather-widget {
-        width: 320px;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        padding: 20px;
-        text-align: center;
-    }
+body{
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1e3a8a,
+            #2563eb
+        );
+    padding:20px;
+}
 
-    .city {
-        font-size: 1.4rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
+.weather-card{
+    width:380px;
+    color:white;
+    border-radius:28px;
+    overflow:hidden;
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.15);
+}
 
-    .temp {
-        font-size: 3rem;
-        color: #0077cc;
-        margin: 10px 0;
-    }
+.header{
+    padding:28px;
+}
 
-    .condition {
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-    }
+.location{
+    font-size:1rem;
+    font-weight:600;
+    opacity:.9;
+}
 
-    .details {
-        text-align: left;
-        margin-top: 15px;
-        line-height: 1.8;
-    }
+.current-time{
+    font-size:.85rem;
+    opacity:.75;
+    margin-top:4px;
+}
 
-    button {
-        margin-top: 15px;
-        padding: 10px 18px;
-        border: none;
-        border-radius: 8px;
-        background: #0077cc;
-        color: white;
-        cursor: pointer;
-        font-size: 1rem;
-    }
+.main-weather{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+}
 
-    button:hover {
-        background: #005fa3;
-    }
+.temp{
+    font-size:4.5rem;
+    font-weight:300;
+    line-height:1;
+}
 
-    .updated {
-        margin-top: 12px;
-        font-size: 0.8rem;
-        color: #666;
-    }
+.icon{
+    font-size:4rem;
+}
+
+.condition{
+    margin-top:8px;
+    font-size:1.1rem;
+    font-weight:500;
+}
+
+.panel{
+    background:rgba(255,255,255,.08);
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:22px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.stat{
+    background:rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:16px;
+}
+
+.stat-label{
+    font-size:.8rem;
+    opacity:.75;
+    margin-bottom:6px;
+}
+
+.stat-value{
+    font-size:1.25rem;
+    font-weight:600;
+}
+
+.refresh-btn{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:none;
+    border-radius:16px;
+    background:white;
+    color:#1e40af;
+    font-weight:700;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.refresh-btn:hover{
+    transform:translateY(-2px);
+}
+
+.updated{
+    text-align:center;
+    margin-top:12px;
+    font-size:.8rem;
+    opacity:.75;
+}
 </style>
 </head>
 <body>
 
-<div class="weather-widget">
-    <div class="city">Middletown, Ohio</div>
+<div class="weather-card">
 
-    <div class="temp" id="temp">--°F</div>
-    <div class="condition" id="condition">Loading...</div>
+    <div class="header">
 
-    <div class="details">
-        <div><strong>Humidity:</strong> <span id="humidity">--</span>%</div>
-        <div><strong>Wind:</strong> <span id="wind">--</span> mph</div>
+        <div class="location">
+            Middletown, Ohio
+        </div>
+
+        <div class="current-time" id="time">
+            Loading...
+        </div>
+
+        <div class="main-weather">
+            <div>
+                <div class="temp" id="temp">--°</div>
+                <div class="condition" id="condition">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="icon" id="icon">☀️</div>
+        </div>
+
     </div>
 
-    <button onclick="fetchWeather()">Refresh Now</button>
+    <div class="panel">
 
-    <div class="updated" id="updated">
-        Last updated: --
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-label">Humidity</div>
+                <div class="stat-value" id="humidity">--%</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Wind</div>
+                <div class="stat-value" id="wind">-- mph</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Feels Like</div>
+                <div class="stat-value" id="feels">--°</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Updated</div>
+                <div class="stat-value" id="updatedTime">--</div>
+            </div>
+
+        </div>
+
+        <button class="refresh-btn" onclick="fetchWeather()">
+            Refresh Weather
+        </button>
+
+        <div class="updated" id="updated">
+            Auto-refresh every 10 minutes
+        </div>
+
     </div>
+
 </div>
 
 <script>
+
 const LAT = 39.5151;
 const LON = -84.3983;
 
-function weatherCodeToText(code) {
+function getWeatherIcon(code){
+
+    if(code === 0) return "☀️";
+    if([1,2].includes(code)) return "🌤️";
+    if(code === 3) return "☁️";
+    if([45,48].includes(code)) return "🌫️";
+    if([51,53,55].includes(code)) return "🌦️";
+    if([61,63,65,80,81,82].includes(code)) return "🌧️";
+    if([71,73,75].includes(code)) return "❄️";
+    if(code === 95) return "⛈️";
+
+    return "🌤️";
+}
+
+function weatherText(code){
+
     const map = {
-        0: "Clear Sky",
-        1: "Mostly Clear",
-        2: "Partly Cloudy",
-        3: "Overcast",
-        45: "Fog",
-        48: "Rime Fog",
-        51: "Light Drizzle",
-        53: "Drizzle",
-        55: "Heavy Drizzle",
-        61: "Light Rain",
-        63: "Rain",
-        65: "Heavy Rain",
-        71: "Light Snow",
-        73: "Snow",
-        75: "Heavy Snow",
-        80: "Rain Showers",
-        81: "Rain Showers",
-        82: "Heavy Showers",
-        95: "Thunderstorm"
+        0:"Clear Sky",
+        1:"Mostly Clear",
+        2:"Partly Cloudy",
+        3:"Overcast",
+        45:"Fog",
+        48:"Dense Fog",
+        51:"Light Drizzle",
+        53:"Drizzle",
+        55:"Heavy Drizzle",
+        61:"Light Rain",
+        63:"Rain",
+        65:"Heavy Rain",
+        71:"Light Snow",
+        73:"Snow",
+        75:"Heavy Snow",
+        80:"Rain Showers",
+        81:"Rain Showers",
+        82:"Heavy Showers",
+        95:"Thunderstorm"
     };
 
     return map[code] || "Unknown";
 }
 
-async function fetchWeather() {
-    try {
+async function fetchWeather(){
+
+    try{
+
         const url =
-            `https://api.open-meteo.com/v1/forecast` +
-            `?latitude=${LAT}` +
-            `&longitude=${LON}` +
-            `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
-            `&temperature_unit=fahrenheit` +
-            `&wind_speed_unit=mph`;
+        `https://api.open-meteo.com/v1/forecast` +
+        `?latitude=${LAT}` +
+        `&longitude=${LON}` +
+        `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
+        `&temperature_unit=fahrenheit` +
+        `&wind_speed_unit=mph`;
 
         const response = await fetch(url);
         const data = await response.json();
@@ -136,32 +266,54 @@ async function fetchWeather() {
         const current = data.current;
 
         document.getElementById("temp").textContent =
-            `${Math.round(current.temperature_2m)}°F`;
+            Math.round(current.temperature_2m) + "°";
+
+        document.getElementById("condition").textContent =
+            weatherText(current.weather_code);
 
         document.getElementById("humidity").textContent =
-            current.relative_humidity_2m;
+            current.relative_humidity_2m + "%";
 
         document.getElementById("wind").textContent =
-            Math.round(current.wind_speed_10m);
+            Math.round(current.wind_speed_10m) + " mph";
 
-        document.getElementById("condition").textContent =
-            weatherCodeToText(current.weather_code);
+        document.getElementById("feels").textContent =
+            Math.round(current.apparent_temperature) + "°";
+
+        document.getElementById("icon").textContent =
+            getWeatherIcon(current.weather_code);
+
+        const now = new Date();
+
+        document.getElementById("updatedTime").textContent =
+            now.toLocaleTimeString([], {
+                hour:'numeric',
+                minute:'2-digit'
+            });
 
         document.getElementById("updated").textContent =
-            "Last updated: " + new Date().toLocaleTimeString();
+            "Last updated " + now.toLocaleTimeString();
 
-    } catch (error) {
-        console.error(error);
+        document.getElementById("time").textContent =
+            now.toLocaleDateString('en-US',{
+                weekday:'long',
+                month:'long',
+                day:'numeric'
+            });
+
+    } catch(error){
+
         document.getElementById("condition").textContent =
             "Unable to load weather";
+
+        console.error(error);
     }
 }
 
-// Initial load
 fetchWeather();
 
-// Auto-refresh every 10 minutes
 setInterval(fetchWeather, 600000);
+
 </script>
 
 </body>
